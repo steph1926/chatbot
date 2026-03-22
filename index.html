@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MerlionsMind – University AI Assistant</title>
+    <meta name="description" content="MerlionsMind University AI Assistant – Chat, Announcements & Events" />
+
+    <meta property="og:title" content="MerlionsMind" />
+    <meta property="og:description" content="University AI Assistant" />
+    <meta property="og:type" content="website" />
+
+    <!-- Tailwind CDN Play -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              border: "hsl(var(--border))",
+              input: "hsl(var(--input))",
+              ring: "hsl(var(--ring))",
+              background: "hsl(var(--background))",
+              foreground: "hsl(var(--foreground))",
+              primary: { DEFAULT: "hsl(var(--primary))", foreground: "hsl(var(--primary-foreground))" },
+              secondary: { DEFAULT: "hsl(var(--secondary))", foreground: "hsl(var(--secondary-foreground))" },
+              destructive: { DEFAULT: "hsl(var(--destructive))", foreground: "hsl(var(--destructive-foreground))" },
+              muted: { DEFAULT: "hsl(var(--muted))", foreground: "hsl(var(--muted-foreground))" },
+              accent: { DEFAULT: "hsl(var(--accent))", foreground: "hsl(var(--accent-foreground))" },
+              popover: { DEFAULT: "hsl(var(--popover))", foreground: "hsl(var(--popover-foreground))" },
+              card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
+              sidebar: {
+                DEFAULT: "hsl(var(--sidebar-background))",
+                foreground: "hsl(var(--sidebar-foreground))",
+                primary: "hsl(var(--sidebar-primary))",
+                "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+                accent: "hsl(var(--sidebar-accent))",
+                "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+                border: "hsl(var(--sidebar-border))",
+                ring: "hsl(var(--sidebar-ring))",
+                muted: "hsl(var(--sidebar-muted))",
+              },
+              chat: { bot: "hsl(var(--chat-bubble-bot))", user: "hsl(var(--chat-bubble-user))" },
+              suggested: { DEFAULT: "hsl(var(--suggested))", border: "hsl(var(--suggested-border))" },
+            },
+            borderRadius: {
+              lg: "var(--radius)",
+              md: "calc(var(--radius) - 2px)",
+              sm: "calc(var(--radius) - 4px)",
+            },
+          },
+        },
+      }
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <style>
+      :root {
+        --background: 0 0% 96%;
+        --foreground: 200 10% 15%;
+        --card: 0 0% 100%;
+        --card-foreground: 200 10% 15%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 200 10% 15%;
+        --primary: 168 55% 32%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 168 20% 92%;
+        --secondary-foreground: 168 55% 20%;
+        --muted: 200 10% 94%;
+        --muted-foreground: 200 10% 45%;
+        --accent: 168 45% 42%;
+        --accent-foreground: 0 0% 100%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 200 10% 88%;
+        --input: 200 10% 88%;
+        --ring: 168 55% 32%;
+        --radius: 0.75rem;
+        --sidebar-background: 180 10% 18%;
+        --sidebar-foreground: 0 0% 92%;
+        --sidebar-primary: 168 55% 45%;
+        --sidebar-primary-foreground: 0 0% 100%;
+        --sidebar-accent: 180 10% 24%;
+        --sidebar-accent-foreground: 0 0% 92%;
+        --sidebar-border: 180 8% 28%;
+        --sidebar-ring: 168 55% 45%;
+        --sidebar-muted: 180 8% 40%;
+        --chat-bubble-bot: 0 0% 94%;
+        --chat-bubble-user: 168 55% 32%;
+        --suggested: 168 30% 95%;
+        --suggested-border: 168 40% 70%;
+      }
+      * { border-color: hsl(var(--border)); }
+      html, body {
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background: hsl(var(--background));
+        color: hsl(var(--foreground));
+      }
+      h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
+      .font-space { font-family: 'Space Grotesk', sans-serif; }
+      .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+      .prose p { margin: 0; }
+      .page { display: none; min-height: 0; }
+      .page.active { display: flex; flex: 1 1 0%; flex-direction: column; min-height: 0; overflow: hidden; }
+    </style>
+  </head>
+
+  <body class="bg-background text-foreground">
+
+    <!-- ========== LOGIN PAGE ========== -->
+    <div id="login-page" class="min-h-screen bg-background flex items-center justify-center px-4">
+      <div class="w-full max-w-sm">
+        <div class="text-center mb-8">
+          <img src="/src/assets/bot-avatar.png" alt="MerlionsMind" class="h-16 w-16 rounded-2xl mx-auto mb-4" />
+          <h1 class="text-2xl font-bold font-space text-foreground">MerlionsMind</h1>
+          <p class="text-sm text-muted-foreground mt-1">Universidad De Manila AI Assistant</p>
+        </div>
+        <div class="bg-card rounded-2xl border border-border p-6 shadow-sm">
+          <h2 id="form-title" class="text-lg font-semibold text-card-foreground mb-1 font-space">Welcome Back</h2>
+          <p id="form-subtitle" class="text-xs text-muted-foreground mb-5">Log in to continue</p>
+          <div id="login-error" class="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-xs font-medium hidden"></div>
+          <form id="login-form" class="space-y-4">
+            <!-- Registration-only fields -->
+            <div id="registration-fields" class="hidden space-y-4">
+              <div>
+                <label class="text-xs font-medium text-card-foreground mb-1.5 block">Full Name</label>
+                <input id="reg-fullname" type="text" placeholder="" class="w-full h-10 rounded-lg border border-input bg-muted/50 px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring" />
+              </div>
+              <div>
+                <label class="text-xs font-medium text-card-foreground mb-1.5 block">Program</label>
+                <input id="reg-program" type="text" placeholder="BS Information Technology" class="w-full h-10 rounded-lg border border-input bg-muted/50 px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring" />
+              </div>
+            </div>
+            <div>
+              <label id="login-id-label" class="text-xs font-medium text-card-foreground mb-1.5 block">Student Number / Email</label>
+              <input id="login-id" type="text" placeholder="Student Number or Admin Email" class="w-full h-10 rounded-lg border border-input bg-muted/50 px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring" />
+            </div>
+            <div>
+              <label class="text-xs font-medium text-card-foreground mb-1.5 block">Password</label>
+              <div class="relative">
+                <input id="login-password" type="password" placeholder="••••••••" class="w-full h-10 rounded-lg border border-input bg-muted/50 px-3 pr-10 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring" />
+                <button type="button" id="toggle-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <i data-lucide="eye" class="h-4 w-4"></i>
+                </button>
+              </div>
+            </div>
+            <button type="submit" id="login-submit-btn" class="w-full h-10 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-accent transition-colors">Log In</button>
+          </form>
+          <div class="mt-5 border-t border-border pt-4 text-center">
+            <p id="toggle-form-text" class="text-xs text-muted-foreground">Don't have an account? <button id="toggle-form-btn" class="text-primary font-semibold hover:underline">Register</button></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== MAIN APP (sidebar + content) ========== -->
+    <div id="main-app" class="flex h-screen overflow-hidden" style="display:none;">
+
+      <!-- Mobile hamburger -->
+      <button id="mobile-menu-btn" class="md:hidden fixed top-3 left-3 z-50 h-10 w-10 rounded-lg bg-sidebar text-sidebar-foreground flex items-center justify-center shadow-lg">
+        <i data-lucide="menu" class="h-5 w-5"></i>
+      </button>
+
+      <aside id="desktop-sidebar"
+     class="hidden md:flex shrink-0 bg-sidebar text-sidebar-foreground flex-col h-full overflow-y-auto transition-all duration-300 w-[260px]"> </aside>
+
+      <!-- Mobile Sidebar Overlay -->
+      <div id="mobile-overlay" class="md:hidden fixed inset-0 z-40 hidden">
+        <div class="absolute inset-0 bg-black/50" id="mobile-overlay-bg"></div>
+        <aside id="mobile-sidebar" class="relative w-72 h-full bg-primary text-primary-foreground flex flex-col z-50">
+          <button id="mobile-close-btn" class="absolute top-4 right-4 text-primary-foreground/60 hover:text-primary-foreground">
+            <i data-lucide="x" class="h-5 w-5"></i>
+          </button>
+        </aside>
+      </div>
+
+      <!-- Content Area -->
+      <div class="flex-1 flex flex-col min-h-0 overflow-hidden">
+
+        <!-- ===== STUDENT PAGES ===== -->
+
+        <!-- CHAT PAGE -->
+        <div id="page-chat" class="page">
+          <header class="h-14 border-b border-border flex items-center gap-3 px-6 pl-16 md:pl-6 shrink-0">
+            <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <i data-lucide="bot" class="h-5 w-5 text-primary"></i>
+            </div>
+            <h2 class="font-semibold text-card-foreground">University AI Assistant</h2>
+          </header>
+          <div id="chat-messages" class="flex-1 overflow-y-auto px-6 py-6 space-y-6 bg-card"></div>
+          <div id="suggested-questions" class="px-6 pb-3">
+            <p class="text-xs text-muted-foreground mb-2 flex items-center gap-1.5">
+              <span class="text-primary">✦</span> Suggested questions
+            </p>
+            <div id="suggested-list" class="flex flex-wrap gap-2"></div>
+          </div>
+          <div class="p-4 border-t border-border shrink-0 bg-card">
+            <div class="flex items-center gap-2 bg-muted rounded-xl px-4 py-2">
+              <input id="chat-input" type="text" placeholder="Type your message..." class="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none" />
+              <button id="chat-send-btn" class="h-8 w-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center hover:bg-accent transition-colors disabled:opacity-40" disabled>
+                <i data-lucide="send" class="h-4 w-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHAT HISTORY PAGE (student) -->
+        <div id="page-chat-history" class="page"></div>
+
+        <!-- SEARCH CHAT PAGE (student) -->
+        <div id="page-search-chat" class="page"></div>
+
+        <!-- ANNOUNCEMENTS PAGE (student - dynamic) -->
+        <div id="page-announcements" class="page"></div>
+
+        <!-- EVENTS PAGE (student - dynamic) -->
+        <div id="page-events" class="page"></div>
+
+        <!-- ===== ADMIN PAGES ===== -->
+
+        <!-- ADMIN DASHBOARD -->
+        <div id="page-admin-dashboard" class="page"></div>
+
+        <!-- ADMIN MANAGE RESPONSES -->
+        <div id="page-admin-responses" class="page"></div>
+
+        <!-- ADMIN CHAT LOGS -->
+        <div id="page-admin-chatlogs" class="page"></div>
+
+        <!-- ADMIN ANNOUNCEMENTS -->
+        <div id="page-admin-announcements" class="page"></div>
+
+        <!-- ADMIN EVENTS -->
+        <div id="page-admin-events" class="page"></div>
+
+        <!-- ADMIN SETTINGS -->
+        <div id="page-admin-settings" class="page"></div>
+
+      </div><!-- end content area -->
+    </div><!-- end main-app -->
+
+    <script type="module" src="/src/app.js"></script>
+
+  </body>
+</html>
